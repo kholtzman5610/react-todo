@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 
 const InputWithLabel = ({
+  id,
   todoTitle,
   handleTitleChange,
   children,
@@ -13,9 +14,9 @@ const InputWithLabel = ({
 
   return (
     <div>
-      <label htmlFor="todoTitle">{children}</label>
+      <label htmlFor={id}>{children}</label>
       <input
-        id="todoTitle"
+        id={id}
         type="text"
         value={todoTitle}
         onChange={handleTitleChange}
