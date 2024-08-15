@@ -1,7 +1,10 @@
 import React, { useEffect, useRef } from 'react';
 
-const InputWithLabel = (props) => {
-  const { id, value, onInputChange, children } = props;
+const InputWithLabel = ({
+  todoTitle,
+  handleTitleChange,
+  children,
+}) => {
   const inputRef = useRef(null);
 
   useEffect(() => {
@@ -9,16 +12,16 @@ const InputWithLabel = (props) => {
   }, []);
 
   return (
-    <>
-      <label htmlFor={id}>{children}</label>
+    <div>
+      <label htmlFor="todoTitle">{children}</label>
       <input
-        ref={inputRef}
-        id={id}
+        id="todoTitle"
         type="text"
-        value={value}
-        onChange={onInputChange}
+        value={todoTitle}
+        onChange={handleTitleChange}
+        ref={inputRef}
       />
-    </>
+    </div>
   );
 };
 
