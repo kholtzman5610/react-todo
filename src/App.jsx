@@ -5,8 +5,12 @@ import AddTodoForm from './AddTodoForm';
 function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   const fetchData = async () => {
+    setIsLoading(true);
+    setError(null);
+
     const options = {
       method: 'GET',
       headers: {
@@ -18,8 +22,10 @@ function App() {
 
     try {
       const response = await fetch(url, options);
+
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`Error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
@@ -29,9 +35,11 @@ function App() {
       }));
 
       setTodoList(todos);
-      setIsLoading(false);
     } catch (error) {
-      console.error('Error fetching data:', error.message);
+      setError(error.message);
+      console.error('Error fetching data:', error);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -46,6 +54,13 @@ function App() {
   }, [todoList, isLoading]);
 
   const addTodo = async (newTodoTitle) => {
+
+    if (!newTodoTitle || typeof newTodoTitle !== 'string') {
+      console.error('Invalid title value:', newTodoTitle);
+      setError('Invalid title value');
+      return;
+    }
+
     const options = {
       method: 'POST',
       headers: {
@@ -63,8 +78,10 @@ function App() {
 
     try {
       const response = await fetch(url, options);
+
       if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
+        const errorText = await response.text();
+        throw new Error(`Error: ${response.status} - ${errorText}`);
       }
 
       const result = await response.json();
@@ -73,15 +90,15 @@ function App() {
         id: result.id,
       };
 
-      setTodoList([...todoList, newTodo]);
+      setTodoList((prevTodoList) => [...prevTodoList, newTodo]);
     } catch (error) {
-      console.error('Error adding todo:', error.message);
+      setError(error.message);
+      console.error('Error adding todo:', error);
     }
   };
 
   const removeTodo = (id) => {
-    const newTodoList = todoList.filter((todo) => todo.id !== id);
-    setTodoList(newTodoList);
+    setTodoList((prevTodoList) => prevTodoList.filter((todo) => todo.id !== id));
   };
 
   return (
@@ -90,6 +107,8 @@ function App() {
       <AddTodoForm onAddTodo={(title) => addTodo(title)} />
       {isLoading ? (
         <p>Loading...</p>
+      ) : error ? (
+        <p>Error: {error}</p>
       ) : (
         <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
       )}
