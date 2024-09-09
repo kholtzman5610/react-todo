@@ -57,7 +57,6 @@ function App() {
   }, [todoList, isLoading]);
 
   const addTodo = async (newTodoTitle) => {
-
     if (!newTodoTitle || typeof newTodoTitle !== 'string') {
       console.error('Invalid title value:', newTodoTitle);
       setError('Invalid title value');
@@ -112,9 +111,13 @@ function App() {
             path="/"
             element={
               <>
-                <FaClipboardList />
-                <h1>Todo List</h1>
-                <AddTodoForm onAddTodo={(title) => addTodo(title)} />
+                <div className="header">
+                  <FaClipboardList className="icon" />
+                  <h1>Todo List</h1>
+                </div>
+                <div className="add-todo-form">
+                  <AddTodoForm onAddTodo={(title) => addTodo(title)} />
+                </div>
                 {isLoading ? (
                   <p>Loading...</p>
                 ) : error ? (

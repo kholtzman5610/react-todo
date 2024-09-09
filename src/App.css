@@ -5,47 +5,6 @@
   text-align: center;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-}
-
-label {
-  -webkit-text-stroke-width: thin;
-  -webkit-text-stroke-color: #222121;
-}
-
 /* Apply a rainbow background to the page */
 body {
   background: linear-gradient(to right, red, orange, yellow, green, blue, indigo, violet);
@@ -67,54 +26,97 @@ body {
   text-align: center;
 }
 
+/* Header styles for icon and title */
+.header {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 30px;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.7);
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+/* Icon styling with rainbow gradient */
+.icon {
+  font-size: 32px;
+  display: inline-block;
+  animation: rainbow-animation 2s infinite;
+}
+
 /* Rainbow theme heading */
 h1 {
   font-size: 2.5em;
   background: -webkit-linear-gradient(left, red, orange, yellow, green, blue, indigo, violet);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
-  margin-bottom: 20px;
+  margin: 0;
 }
 
 /* Styling for todo items */
 li {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   font-size: 1.2em;
   color: #fff;
   display: flex;
   align-items: center;
+  padding: 10px;
+  border-radius: 4px;
+  background-color: #333;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Add a check icon before each todo item using FontAwesome */
 li::before {
+  content: "\f192";
   font-family: "Font Awesome 5 Free";
-  margin-right: 10px;
   font-weight: 900;
-  color: lightgreen;
+  margin-right: 15px;
+  color: black;
+  font-size: 1.5em;
+}
+
+/* Style for AddTodoForm container */
+.add-todo-form {
+  margin-bottom: 20px;
+  padding: 15px;
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Style for input field in the form */
+input {
+  padding: 12px;
+  border-radius: 4px;
+  border: 2px solid #ff2020;
+  font-size: 1em;
+  transition: border-color 0.3s ease;
+}
+
+input:focus {
+  border-color: #ff2020;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(255, 32, 32, 0.3);
 }
 
 /* Customize buttons */
 button {
-  padding: 10px 15px;
+  padding: 12px 18px;
   margin-left: 10px;
   background-color: #007bff;
   color: white;
   border: none;
   border-radius: 5px;
   cursor: pointer;
+  font-size: 1em;
+  transition: background-color 0.3s ease;
 }
 
 /* Change button background on hover */
 button:hover {
   background-color: #0056b3;
-}
-
-/* Input styles */
-input {
-  padding: 10px;
-  margin-right: 10px;
-  border-radius: 4px;
-  border: 1px solid #ff2020;
 }
 
 /* Responsive design: Adjust layout for smaller screens */
@@ -130,4 +132,16 @@ input {
   button, input {
     font-size: 1em;
   }
+}
+
+/* Keyframes for rainbow animation */
+@keyframes rainbow-animation {
+  0% { color: red; }
+  14% { color: orange; }
+  28% { color: yellow; }
+  42% { color: green; }
+  57% { color: blue; }
+  71% { color: indigo; }
+  85% { color: violet; }
+  100% { color: red; }
 }
