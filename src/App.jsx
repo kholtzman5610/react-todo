@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TodoList from './TodoList';
 import AddTodoForm from './AddTodoForm';
+import './App.css';
+import { FaClipboardList } from "react-icons/fa";
 
 function App() {
   const [todoList, setTodoList] = useState([]);
@@ -104,25 +106,28 @@ function App() {
 
   return (
     <Router>
-      <Routes>
-        <Route 
-          path="/" 
-          element={
-            <>
-              <h1>Todo List</h1>
-              <AddTodoForm onAddTodo={(title) => addTodo(title)} />
-              {isLoading ? (
-                <p>Loading...</p>
-              ) : error ? (
-                <p>Error: {error}</p>
-              ) : (
-                <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
-              )}
-            </>
-          } 
-        />
-        <Route path="/new" element={<h1>New Todo List</h1>} />
-      </Routes>
+      <div className="container">
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <>
+                <FaClipboardList />
+                <h1>Todo List</h1>
+                <AddTodoForm onAddTodo={(title) => addTodo(title)} />
+                {isLoading ? (
+                  <p>Loading...</p>
+                ) : error ? (
+                  <p>Error: {error}</p>
+                ) : (
+                  <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+                )}
+              </>
+            }
+          />
+          <Route path="/new" element={<h1>New Todo List</h1>} />
+        </Routes>
+      </div>
     </Router>
   );
 }
