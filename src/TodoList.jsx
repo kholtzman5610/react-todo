@@ -1,7 +1,7 @@
 import React from 'react';
 import TodoListItem from './TodoListItem';
 
-function TodoList({ todoList, onRemoveTodo, onCompleteTodo }) {
+function TodoList({ todoList, onRemoveTodo, onToggleComplete }) {
   return (
     <ul>
       {todoList.map((todo) => (
@@ -9,7 +9,7 @@ function TodoList({ todoList, onRemoveTodo, onCompleteTodo }) {
           key={todo.id}
           todo={todo}
           onRemove={() => onRemoveTodo(todo.id)}
-          onComplete={() => onCompleteTodo(todo.id)}
+          onToggleComplete={() => onToggleComplete(todo.id, todo.completedAt)}
         />
       ))}
     </ul>

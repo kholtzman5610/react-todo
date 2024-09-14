@@ -100,8 +100,9 @@ function App() {
     }
   };
 
-  const completeTodo = async (id) => {
-    const completedAt = new Date().toISOString().split('T')[0];
+  const toggleTodoCompletion = async (id, currentCompletedAt) => {
+    const isCompleted = Boolean(currentCompletedAt);
+    const completedAt = isCompleted ? null : new Date().toISOString().split('T')[0];
   
     const options = {
       method: 'PATCH',
@@ -133,9 +134,10 @@ function App() {
       );
     } catch (error) {
       setError(error.message);
-      console.error('Error updating todo:', error);
+      console.error('Error toggling todo completion:', error);
     }
   };
+  
   
   const removeTodo = async (id) => {
     const options = {
@@ -182,7 +184,7 @@ function App() {
                 ) : error ? (
                   <p>Error: {error}</p>
                 ) : (
-                  <TodoList todoList={todoList} onRemoveTodo={removeTodo} onCompleteTodo={completeTodo} />
+                  <TodoList todoList={todoList} onRemoveTodo={removeTodo} onToggleComplete={toggleTodoCompletion} />
                 )}
               </>
             }
