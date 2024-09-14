@@ -1,19 +1,23 @@
 import React from 'react';
 import styles from './TodoListItem.module.css';
 
-const TodoListItem = ({ todo, onRemoveTodo }) => {
+function TodoListItem({ todo, onRemove, onComplete }) {
   return (
     <li className={styles.ListItem}>
-      {todo.title}
-      <button
-        type="button"
-        className={styles.RemoveButton}
-        onClick={() => onRemoveTodo(todo.id)}
-      >
+      <div>
+        <span>{todo.title}</span>
+        {todo.completedAt && (
+          <p className={styles.CompletedAt}>Completed on: {new Date(todo.completedAt).toLocaleString()}</p>
+        )}
+      </div>
+      <button className={styles.CompleteButton} onClick={onComplete}>
+        Complete
+      </button>
+      <button className={styles.RemoveButton} onClick={onRemove}>
         Remove
       </button>
     </li>
   );
-};
+}
 
 export default TodoListItem;

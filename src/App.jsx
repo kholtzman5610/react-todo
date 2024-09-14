@@ -35,6 +35,7 @@ function App() {
       const todos = data.records.map((record) => ({
         title: record.fields.title,
         id: record.id,
+        completedAt: record.fields.completedAt || null,
       }));
 
       setTodoList(todos);
@@ -99,8 +100,66 @@ function App() {
     }
   };
 
-  const removeTodo = (id) => {
-    setTodoList((prevTodoList) => prevTodoList.filter((todo) => todo.id !== id));
+  const completeTodo = async (id) => {
+    const completedAt = new Date().toISOString().split('T')[0];
+  
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fields: {
+          completedAt: completedAt,
+        },
+      }),
+    };
+  
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}/${id}`;
+  
+    try {
+      const response = await fetch(url, options);
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error: ${response.status} - ${errorText}`);
+      }
+  
+      setTodoList((prevTodoList) =>
+        prevTodoList.map((todo) =>
+          todo.id === id ? { ...todo, completedAt } : todo
+        )
+      );
+    } catch (error) {
+      setError(error.message);
+      console.error('Error updating todo:', error);
+    }
+  };
+  
+  const removeTodo = async (id) => {
+    const options = {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+      },
+    };
+
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}/${id}`;
+
+    try {
+      const response = await fetch(url, options);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error: ${response.status} - ${errorText}`);
+      }
+
+      setTodoList((prevTodoList) => prevTodoList.filter((todo) => todo.id !== id));
+    } catch (error) {
+      setError(error.message);
+      console.error('Error deleting todo:', error);
+    }
   };
 
   return (
@@ -123,7 +182,7 @@ function App() {
                 ) : error ? (
                   <p>Error: {error}</p>
                 ) : (
-                  <TodoList todoList={todoList} onRemoveTodo={removeTodo} />
+                  <TodoList todoList={todoList} onRemoveTodo={removeTodo} onCompleteTodo={completeTodo} />
                 )}
               </>
             }

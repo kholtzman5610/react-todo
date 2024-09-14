@@ -1,3 +1,11 @@
+/* Styling for the completedAt text */
+.CompletedAt {
+  font-size: 12px;
+  color: #999;
+  margin-top: 5px;
+  font-style: italic;
+}
+
 /* Style for the ListItem */
 .ListItem {
   color: #333;
@@ -28,13 +36,28 @@
   background-color: #c0392b;
 }
 
+/* Button styling for the complete button */
+.CompleteButton {
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.CompleteButton:hover {
+  background-color: #45a049;
+}
+
 /* Media Queries for responsive design */
 @media (max-width: 600px) {
   .ListItem {
     font-size: 14px;
   }
 
-  .RemoveButton {
+  .RemoveButton, .CompleteButton {
     padding: 6px 12px;
   }
 }
