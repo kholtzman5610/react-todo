@@ -14,7 +14,7 @@ function TodoListItem({ todo, onRemove, onToggleComplete }) {
         </span>
         {todo.completedAt && (
           <p className={styles.CompletedAt}>
-            Completed on: {new Date(todo.completedAt).toLocaleString()}
+            Completed on: {new Date(todo.completedAt).toLocaleDateString()}
           </p>
         )}
       </div>
