@@ -13,6 +13,21 @@
   text-align: center;
 }
 
+/* Button styling for the complete button */
+.CompleteButton {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.CompleteButton:hover {
+  background-color: #2ecc71;
+}
+
 /* Button styling for the remove button */
 .RemoveButton {
   background-color: #e74c3c;
@@ -34,7 +49,8 @@
     font-size: 14px;
   }
 
-  .RemoveButton {
+  .RemoveButton,
+  .CompleteButton {
     padding: 6px 12px;
   }
 }
