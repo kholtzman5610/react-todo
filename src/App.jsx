@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import TodoList from './TodoList';
-import AddTodoForm from './AddTodoForm';
+import TodoList from './components/TodoList';
+import AddTodoForm from './components/AddTodoForm';
 import './App.css';
 import { FaClipboardList } from "react-icons/fa";
 
@@ -57,7 +57,7 @@ function App() {
     }
   }, [todoList, isLoading]);
 
-  const addTodo = async (newTodoTitle) => {
+  const addTodo = useCallback(async (newTodoTitle) => {
     if (!newTodoTitle || typeof newTodoTitle !== 'string') {
       console.error('Invalid title value:', newTodoTitle);
       setError('Invalid title value');
@@ -98,12 +98,12 @@ function App() {
       setError(error.message);
       console.error('Error adding todo:', error);
     }
-  };
+  }, []);
 
-  const toggleTodoCompletion = async (id, currentCompletedAt) => {
+  const toggleTodoCompletion = useCallback(async (id, currentCompletedAt) => {
     const isCompleted = Boolean(currentCompletedAt);
     const completedAt = isCompleted ? null : new Date().toISOString().split('T')[0];
-  
+
     const options = {
       method: 'PATCH',
       headers: {
@@ -116,17 +116,17 @@ function App() {
         },
       }),
     };
-  
+
     const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}/${id}`;
-  
+
     try {
       const response = await fetch(url, options);
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error: ${response.status} - ${errorText}`);
       }
-  
+
       setTodoList((prevTodoList) =>
         prevTodoList.map((todo) =>
           todo.id === id ? { ...todo, completedAt } : todo
@@ -136,10 +136,9 @@ function App() {
       setError(error.message);
       console.error('Error toggling todo completion:', error);
     }
-  };
-  
-  
-  const removeTodo = async (id) => {
+  }, []);
+
+  const removeTodo = useCallback(async (id) => {
     const options = {
       method: 'DELETE',
       headers: {
@@ -162,7 +161,7 @@ function App() {
       setError(error.message);
       console.error('Error deleting todo:', error);
     }
-  };
+  }, []);
 
   return (
     <Router>
@@ -177,7 +176,7 @@ function App() {
                   <h1>Todo List</h1>
                 </div>
                 <div className="add-todo-form">
-                  <AddTodoForm onAddTodo={(title) => addTodo(title)} />
+                  <AddTodoForm onAddTodo={addTodo} />
                 </div>
                 {isLoading ? (
                   <p>Loading...</p>
