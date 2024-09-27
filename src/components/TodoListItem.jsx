@@ -1,4 +1,5 @@
 import React from 'react';
+import PropTypes from 'prop-types';
 import styles from './TodoListItem.module.css';
 
 function TodoListItem({ todo, onRemove, onToggleComplete }) {
@@ -20,15 +21,25 @@ function TodoListItem({ todo, onRemove, onToggleComplete }) {
       </div>
       <button
         className={styles.CompleteButton}
-        onClick={() => onToggleComplete(todo.id)}
+        onClick={onToggleComplete}
       >
         {isCompleted ? 'Undo' : 'Mark as Completed'}
       </button>
-      <button className={styles.RemoveButton} onClick={() => onRemove(todo.id)}>
+      <button className={styles.RemoveButton} onClick={onRemove}>
         Remove
       </button>
     </li>
   );
 }
+
+TodoListItem.propTypes = {
+  todo: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    title: PropTypes.string.isRequired,
+    completedAt: PropTypes.string,
+  }).isRequired,
+  onRemove: PropTypes.func.isRequired,
+  onToggleComplete: PropTypes.func.isRequired,
+};
 
 export default TodoListItem;
