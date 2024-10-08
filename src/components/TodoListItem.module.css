@@ -22,6 +22,13 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.CompleteButton svg {
+  margin-right: 8px;
+  font-size: 1.2em;
 }
 
 .CompleteButton:hover {
@@ -37,6 +44,13 @@
   border-radius: 5px;
   cursor: pointer;
   transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.RemoveButton svg {
+  margin-right: 8px;
+  font-size: 1.2em;
 }
 
 .RemoveButton:hover {

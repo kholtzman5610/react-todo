@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './TodoListItem.module.css';
+import { FaUndo, FaCheck } from 'react-icons/fa';
 
 function TodoListItem({ todo, onRemove, onToggleComplete }) {
   const isCompleted = !!todo.completedAt;
@@ -23,7 +24,9 @@ function TodoListItem({ todo, onRemove, onToggleComplete }) {
         className={styles.CompleteButton}
         onClick={onToggleComplete}
       >
-        {isCompleted ? 'Undo' : 'Mark as Completed'}
+        {/* Toggle between icons based on completion state */}
+        {isCompleted ? <FaUndo /> : <FaCheck />}
+        {isCompleted ? ' Undo' : ' Mark as Completed'}
       </button>
       <button className={styles.RemoveButton} onClick={onRemove}>
         Remove
