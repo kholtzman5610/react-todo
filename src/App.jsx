@@ -33,7 +33,7 @@ function App() {
       }
 
       const data = await response.json();
-      
+
       const todos = data.records
         .map((record) => ({
           title: record.fields.title,
@@ -45,13 +45,10 @@ function App() {
           const titleB = objectB.title.toLowerCase();
 
           if (sortOrder === 'asc') {
-            if (titleA < titleB) return -1;
-            if (titleA > titleB) return 1;
+            return titleA < titleB ? -1 : titleA > titleB ? 1 : 0;
           } else {
-            if (titleA < titleB) return 1;
-            if (titleA > titleB) return -1;
+            return titleA < titleB ? 1 : titleA > titleB ? -1 : 0;
           }
-          return 0;
         });
 
       setTodoList(todos);
@@ -68,9 +65,13 @@ function App() {
   }, [sortOrder]);
 
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem('savedTodoList', JSON.stringify(todoList));
-    }
+    const debounceSave = setTimeout(() => {
+      if (!isLoading) {
+        localStorage.setItem('savedTodoList', JSON.stringify(todoList));
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceSave);
   }, [todoList, isLoading]);
 
   const addTodo = useCallback(async (newTodoTitle) => {
@@ -180,7 +181,7 @@ function App() {
   }, []);
 
   const toggleSortOrder = () => {
-    setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc');
+    setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
   };
 
   return (
