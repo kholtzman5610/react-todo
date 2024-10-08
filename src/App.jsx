@@ -9,6 +9,7 @@ function App() {
   const [todoList, setTodoList] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [sortOrder, setSortOrder] = useState('asc');
 
   const fetchData = async () => {
     setIsLoading(true);
@@ -21,7 +22,7 @@ function App() {
       },
     };
 
-    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}`;
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}?view=Grid%20view&sort[0][field]=title&sort[0][direction]=asc`;
 
     try {
       const response = await fetch(url, options);
@@ -32,11 +33,23 @@ function App() {
       }
 
       const data = await response.json();
-      const todos = data.records.map((record) => ({
-        title: record.fields.title,
-        id: record.id,
-        completedAt: record.fields.completedAt || null,
-      }));
+
+      const todos = data.records
+        .map((record) => ({
+          title: record.fields.title,
+          id: record.id,
+          completedAt: record.fields.completedAt || null,
+        }))
+        .sort((objectA, objectB) => {
+          const titleA = objectA.title.toLowerCase();
+          const titleB = objectB.title.toLowerCase();
+
+          if (sortOrder === 'asc') {
+            return titleA < titleB ? -1 : titleA > titleB ? 1 : 0;
+          } else {
+            return titleA < titleB ? 1 : titleA > titleB ? -1 : 0;
+          }
+        });
 
       setTodoList(todos);
     } catch (error) {
@@ -49,12 +62,16 @@ function App() {
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [sortOrder]);
 
   useEffect(() => {
-    if (!isLoading) {
-      localStorage.setItem('savedTodoList', JSON.stringify(todoList));
-    }
+    const debounceSave = setTimeout(() => {
+      if (!isLoading) {
+        localStorage.setItem('savedTodoList', JSON.stringify(todoList));
+      }
+    }, 500);
+
+    return () => clearTimeout(debounceSave);
   }, [todoList, isLoading]);
 
   const addTodo = useCallback(async (newTodoTitle) => {
@@ -163,6 +180,10 @@ function App() {
     }
   }, []);
 
+  const toggleSortOrder = () => {
+    setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
+  };
+
   return (
     <Router>
       <div className="container">
@@ -175,6 +196,9 @@ function App() {
                   <FaClipboardList className="icon" />
                   <h1>Todo List</h1>
                 </div>
+                <button onClick={toggleSortOrder}>
+                  Toggle Sort Order ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
+                </button>
                 <div className="add-todo-form">
                   <AddTodoForm onAddTodo={addTodo} />
                 </div>
