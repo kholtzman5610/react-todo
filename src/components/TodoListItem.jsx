@@ -1,7 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import styles from './TodoListItem.module.css';
-import { FaUndo, FaCheck } from 'react-icons/fa';
+import { FaUndo, FaCheck, FaTrash } from 'react-icons/fa';
 
 function TodoListItem({ todo, onRemove, onToggleComplete }) {
   const isCompleted = !!todo.completedAt;
@@ -9,9 +9,7 @@ function TodoListItem({ todo, onRemove, onToggleComplete }) {
   return (
     <li className={styles.ListItem}>
       <div>
-        <span
-          style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}
-        >
+        <span style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
           {todo.title}
         </span>
         {todo.completedAt && (
@@ -20,15 +18,12 @@ function TodoListItem({ todo, onRemove, onToggleComplete }) {
           </p>
         )}
       </div>
-      <button
-        className={styles.CompleteButton}
-        onClick={onToggleComplete}
-      >
-        {/* Toggle between icons based on completion state */}
+      <button className={styles.CompleteButton} onClick={onToggleComplete}>
         {isCompleted ? <FaUndo /> : <FaCheck />}
         {isCompleted ? ' Undo' : ' Mark as Completed'}
       </button>
       <button className={styles.RemoveButton} onClick={onRemove}>
+        <FaTrash />
         Remove
       </button>
     </li>
