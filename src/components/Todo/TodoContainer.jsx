@@ -69,19 +69,25 @@ const TodoContainer = ({ tableName }) => {
         },
       }),
     };
-
+  
     const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${tableName}`;
-
+  
     try {
       const response = await fetch(url, options);
       const result = await response.json();
       const newTodo = { title: result.fields.title, id: result.id };
-      setTodoList((prevTodoList) => [...prevTodoList, newTodo]);
+  
+      // Sort the todo list alphabetically by title after adding a new todo
+      setTodoList((prevTodoList) => {
+        const updatedList = [...prevTodoList, newTodo];
+        return updatedList.sort((a, b) => a.title.toLowerCase().localeCompare(b.title.toLowerCase()));
+      });
     } catch (error) {
       setError(error.message);
       console.error('Error adding todo:', error);
     }
   }, [tableName]);
+  
 
   const removeTodo = useCallback(async (id) => {
     const options = {
@@ -100,6 +106,35 @@ const TodoContainer = ({ tableName }) => {
     }
   }, [tableName]);
 
+  const toggleComplete = useCallback(async (id, completedAt) => {
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fields: {
+          completedAt: completedAt ? null : new Date().toISOString(),
+        },
+      }),
+    };
+
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${tableName}/${id}`;
+
+    try {
+      await fetch(url, options);
+      setTodoList((prevTodoList) =>
+        prevTodoList.map((todo) =>
+          todo.id === id ? { ...todo, completedAt: completedAt ? null : new Date().toISOString() } : todo
+        )
+      );
+    } catch (error) {
+      setError(error.message);
+      console.error('Error toggling todo completion:', error);
+    }
+  }, [tableName]);
+
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
   };
@@ -114,7 +149,13 @@ const TodoContainer = ({ tableName }) => {
         Toggle Sort Order ({sortOrder === 'asc' ? 'A-Z' : 'Z-A'})
       </button>
       <AddTodoForm onAddTodo={addTodo} />
-      {isLoading ? <p>Loading...</p> : error ? <p>Error: {error}</p> : <TodoList todoList={todoList} onRemoveTodo={removeTodo} />}
+      {isLoading ? <p>Loading...</p> : error ? <p>Error: {error}</p> : (
+        <TodoList
+          todoList={todoList}
+          onRemoveTodo={removeTodo}
+          onToggleComplete={toggleComplete}
+        />
+      )}
     </div>
   );
 };
