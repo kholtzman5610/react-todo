@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import TodoList from '../TodoList';
+import TodoList from '../Todo/TodoList';
 import '@testing-library/jest-dom';
 
 test('renders todo list and calls onRemoveTodo and onToggleComplete', () => {

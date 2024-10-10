@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import TodoListItem from '../TodoListItem';
+import TodoListItem from '../Todo/TodoListItem';
 import userEvent from '@testing-library/user-event';
 import '@testing-library/jest-dom';
 import { waitFor } from '@testing-library/react';
