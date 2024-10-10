@@ -2,8 +2,12 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import TodoList from './components/TodoList';
 import AddTodoForm from './components/AddTodoForm';
+import Home from './components/Home';
 import './App.css';
-import { FaClipboardList } from "react-icons/fa";
+import './navbar-style.scss';
+import { FaClipboardList } from 'react-icons/fa';
+import Navigation from './components/Navigation';
+import NavLink from './components/NavLink';
 
 function App() {
   const [todoList, setTodoList] = useState([]);
@@ -26,29 +30,22 @@ function App() {
 
     try {
       const response = await fetch(url, options);
-
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error: ${response.status} - ${errorText}`);
       }
 
       const data = await response.json();
-
       const todos = data.records
         .map((record) => ({
           title: record.fields.title,
           id: record.id,
           completedAt: record.fields.completedAt || null,
         }))
-        .sort((objectA, objectB) => {
-          const titleA = objectA.title.toLowerCase();
-          const titleB = objectB.title.toLowerCase();
-
-          if (sortOrder === 'asc') {
-            return titleA < titleB ? -1 : titleA > titleB ? 1 : 0;
-          } else {
-            return titleA < titleB ? 1 : titleA > titleB ? -1 : 0;
-          }
+        .sort((a, b) => {
+          const titleA = a.title.toLowerCase();
+          const titleB = b.title.toLowerCase();
+          return sortOrder === 'asc' ? (titleA < titleB ? -1 : titleA > titleB ? 1 : 0) : (titleA > titleB ? -1 : titleA < titleB ? 1 : 0);
         });
 
       setTodoList(todos);
@@ -63,16 +60,6 @@ function App() {
   useEffect(() => {
     fetchData();
   }, [sortOrder]);
-
-  useEffect(() => {
-    const debounceSave = setTimeout(() => {
-      if (!isLoading) {
-        localStorage.setItem('savedTodoList', JSON.stringify(todoList));
-      }
-    }, 500);
-
-    return () => clearTimeout(debounceSave);
-  }, [todoList, isLoading]);
 
   const addTodo = useCallback(async (newTodoTitle) => {
     if (!newTodoTitle || typeof newTodoTitle !== 'string') {
@@ -98,7 +85,6 @@ function App() {
 
     try {
       const response = await fetch(url, options);
-
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error: ${response.status} - ${errorText}`);
@@ -119,7 +105,7 @@ function App() {
 
   const toggleTodoCompletion = useCallback(async (id, currentCompletedAt) => {
     const isCompleted = Boolean(currentCompletedAt);
-    const completedAt = isCompleted ? null : new Date().toISOString().split('T')[0];
+    const completedAt = isCompleted ? null : new Date().toISOString();
 
     const options = {
       method: 'PATCH',
@@ -129,7 +115,7 @@ function App() {
       },
       body: JSON.stringify({
         fields: {
-          completedAt: completedAt,
+          completedAt,
         },
       }),
     };
@@ -138,16 +124,13 @@ function App() {
 
     try {
       const response = await fetch(url, options);
-
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error: ${response.status} - ${errorText}`);
       }
 
       setTodoList((prevTodoList) =>
-        prevTodoList.map((todo) =>
-          todo.id === id ? { ...todo, completedAt } : todo
-        )
+        prevTodoList.map((todo) => (todo.id === id ? { ...todo, completedAt } : todo))
       );
     } catch (error) {
       setError(error.message);
@@ -167,7 +150,6 @@ function App() {
 
     try {
       const response = await fetch(url, options);
-
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error: ${response.status} - ${errorText}`);
@@ -186,10 +168,20 @@ function App() {
 
   return (
     <Router>
+      {/* Navigation links */}
+      <Navigation>
+        <NavLink text='Home' url='/' />
+        <NavLink text='Todo List' url='/todos' />
+      </Navigation>
+
       <div className="container">
         <Routes>
+          {/* Home Route */}
+          <Route path="/" element={<Home />} />
+
+          {/* To-Do List Route */}
           <Route
-            path="/"
+            path="/todos"
             element={
               <>
                 <div className="header">
@@ -207,12 +199,15 @@ function App() {
                 ) : error ? (
                   <p>Error: {error}</p>
                 ) : (
-                  <TodoList todoList={todoList} onRemoveTodo={removeTodo} onToggleComplete={toggleTodoCompletion} />
+                  <TodoList
+                    todoList={todoList}
+                    onRemoveTodo={removeTodo}
+                    onToggleComplete={toggleTodoCompletion}
+                  />
                 )}
               </>
             }
           />
-          <Route path="/new" element={<h1>New Todo List</h1>} />
         </Routes>
       </div>
     </Router>
