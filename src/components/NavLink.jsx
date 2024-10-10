@@ -1,8 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 
 const NavLink = ({ text, url }) => {
-  return <a href={url}>{text}</a>;
+  return <Link to={url}>{text}</Link>;
 };
 
 NavLink.propTypes = {
