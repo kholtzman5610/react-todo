@@ -69,14 +69,14 @@ const TodoContainer = ({ tableName }) => {
         },
       }),
     };
-  
+
     const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${tableName}`;
-  
+
     try {
       const response = await fetch(url, options);
       const result = await response.json();
       const newTodo = { title: result.fields.title, id: result.id };
-  
+
       // Sort the todo list alphabetically by title after adding a new todo
       setTodoList((prevTodoList) => {
         const updatedList = [...prevTodoList, newTodo];
@@ -87,7 +87,42 @@ const TodoContainer = ({ tableName }) => {
       console.error('Error adding todo:', error);
     }
   }, [tableName]);
-  
+
+  const editTodo = useCallback(async (id, newTitle) => {
+    const options = {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${import.meta.env.VITE_AIRTABLE_API_TOKEN}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        fields: {
+          title: newTitle,
+        },
+      }),
+    };
+
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${tableName}/${id}`;
+
+    try {
+      const response = await fetch(url, options);
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error('Error response from Airtable:', data);
+        throw new Error(`Error: ${response.status} - ${data.error.message}`);
+      }
+
+      setTodoList((prevTodoList) =>
+        prevTodoList.map((todo) =>
+          todo.id === id ? { ...todo, title: newTitle } : todo
+        )
+      );
+    } catch (error) {
+      setError(error.message);
+      console.error('Error editing todo:', error);
+    }
+  }, [tableName]);
 
   const removeTodo = useCallback(async (id) => {
     const options = {
@@ -154,6 +189,7 @@ const TodoContainer = ({ tableName }) => {
           todoList={todoList}
           onRemoveTodo={removeTodo}
           onToggleComplete={toggleComplete}
+          onEdit={editTodo}
         />
       )}
     </div>

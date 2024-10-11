@@ -1,34 +1,54 @@
-import React from 'react';
+import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './TodoListItem.module.css';
-import { FaUndo, FaCheck, FaTrash } from 'react-icons/fa';
+import { FaUndo, FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
 
-function TodoListItem({ todo, onRemove, onToggleComplete }) {
+const TodoListItem = ({ todo, onRemove, onToggleComplete, onEdit }) => {
+  const [isEditing, setIsEditing] = useState(false);
+  const [newTitle, setNewTitle] = useState(todo.title);
   const isCompleted = !!todo.completedAt;
+
+  const handleEdit = () => {
+    if (isEditing && newTitle !== todo.title) {
+      onEdit(todo.id, newTitle);
+    }
+    setIsEditing(!isEditing);
+  };
 
   return (
     <li className={styles.ListItem}>
       <div>
         <span style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
-          {todo.title}
+          {isEditing ? (
+            <input
+              type="text"
+              value={newTitle}
+              onChange={(e) => setNewTitle(e.target.value)}
+            />
+          ) : (
+            todo.title
+          )}
         </span>
-        {todo.completedAt && (
+        {isCompleted && (
           <p className={styles.CompletedAt}>
             Completed on: {new Date(todo.completedAt).toLocaleDateString()}
           </p>
         )}
       </div>
-      <button className={styles.CompleteButton} onClick={onToggleComplete}>
+      <button className={styles.CompleteButton} onClick={() => onToggleComplete(todo.id, todo.completedAt)}>
         {isCompleted ? <FaUndo /> : <FaCheck />}
         {isCompleted ? ' Undo' : ' Mark as Completed'}
       </button>
-      <button className={styles.RemoveButton} onClick={onRemove}>
+      <button className={styles.EditButton} onClick={handleEdit}>
+        {isEditing ? 'Save' : <FaEdit />}
+      </button>
+      <button className={styles.RemoveButton} onClick={() => onRemove(todo.id)}>
         <FaTrash />
         Remove
       </button>
     </li>
   );
-}
+};
 
 TodoListItem.propTypes = {
   todo: PropTypes.shape({
@@ -38,6 +58,7 @@ TodoListItem.propTypes = {
   }).isRequired,
   onRemove: PropTypes.func.isRequired,
   onToggleComplete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
 };
 
 export default TodoListItem;

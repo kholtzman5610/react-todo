@@ -1,21 +1,20 @@
-import React, { memo } from 'react';
-import PropTypes from 'prop-types';
+import React from 'react';
 import TodoListItem from './TodoListItem';
+import PropTypes from 'prop-types';
 
-function TodoList({ todoList, onRemoveTodo, onToggleComplete }) {
-  return (
-    <ul>
-      {todoList.map((todo) => (
-        <TodoListItem
-          key={todo.id}
-          todo={todo}
-          onRemove={() => onRemoveTodo(todo.id)}
-          onToggleComplete={() => onToggleComplete(todo.id, todo.completedAt)}
-        />
-      ))}
-    </ul>
-  );
-}
+const TodoList = ({ todoList, onRemoveTodo, onToggleComplete, onEdit }) => (
+  <ul>
+    {todoList.map((todo) => (
+      <TodoListItem
+        key={todo.id}
+        todo={todo}
+        onRemoveTodo={onRemoveTodo}
+        onToggleComplete={onToggleComplete}
+        onEdit={onEdit}
+      />
+    ))}
+  </ul>
+);
 
 TodoList.propTypes = {
   todoList: PropTypes.arrayOf(
@@ -27,6 +26,7 @@ TodoList.propTypes = {
   ).isRequired,
   onRemoveTodo: PropTypes.func.isRequired,
   onToggleComplete: PropTypes.func.isRequired,
+  onEdit: PropTypes.func.isRequired,
 };
 
-export default memo(TodoList);
+export default TodoList;

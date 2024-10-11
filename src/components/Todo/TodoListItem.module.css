@@ -57,6 +57,29 @@
   background-color: #c0392b;
 }
 
+/* Button styling for the edit button */
+.EditButton {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
+}
+
+.EditButton svg {
+  margin-right: 8px;
+  font-size: 1.2em;
+}
+
+.EditButton:hover {
+  background-color: #2980b9;
+}
+
+
 /* Media Queries for responsive design */
 @media (max-width: 600px) {
   .ListItem {
