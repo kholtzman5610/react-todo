@@ -6,7 +6,14 @@ import { FaUndo, FaCheck, FaEdit, FaSave, FaTrash } from 'react-icons/fa';
 const TodoListItem = ({ todo, onRemoveTodo, onToggleComplete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(todo.title);
+  const [isExpanded, setIsExpanded] = useState(false);
   const isCompleted = !!todo.completedAt;
+
+  const toggleExpand = () => setIsExpanded(!isExpanded);
+
+  const truncatedText = todo.title.length > 50 && !isExpanded
+    ? `${todo.title.slice(0, 50)}...`
+    : todo.title;
 
   const handleEdit = () => {
     if (isEditing && newTitle !== todo.title) {
@@ -15,38 +22,54 @@ const TodoListItem = ({ todo, onRemoveTodo, onToggleComplete, onEdit }) => {
     setIsEditing(!isEditing);
   };
 
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleEdit();
+    }
+  };
+
   return (
     <li className={styles.ListItem}>
-      <div>
-        <span style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
-          {isEditing ? (
-            <input
-              type="text"
-              value={newTitle}
-              onChange={(e) => setNewTitle(e.target.value)}
-            />
-          ) : (
-            todo.title
+      <div className={styles.ContentWrapper}>
+        <div>
+          <span style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
+            {isEditing ? (
+              <input
+                type="text"
+                value={newTitle}
+                onChange={(e) => setNewTitle(e.target.value)}
+                onKeyPress={handleKeyPress}
+              />
+            ) : (
+              truncatedText
+            )}
+          </span>
+          {todo.title.length > 50 && !isEditing && (
+            <button className={styles.SeeMoreButton} onClick={toggleExpand}>
+              {isExpanded ? 'See Less' : 'See More'}
+            </button>
           )}
-        </span>
-        {isCompleted && (
-          <p className={styles.CompletedAt}>
-            Completed on: {new Date(todo.completedAt).toLocaleDateString()}
-          </p>
-        )}
+          {isCompleted && (
+            <p className={styles.CompletedAt}>
+              Completed on: {new Date(todo.completedAt).toLocaleDateString()}
+            </p>
+          )}
+        </div>
       </div>
-      <button className={styles.CompleteButton} onClick={() => onToggleComplete(todo.id, todo.completedAt)}>
-        {isCompleted ? <FaUndo /> : <FaCheck />}
-        {isCompleted ? ' Undo' : ' Mark as Completed'}
-      </button>
-      <button className={styles.EditButton} onClick={handleEdit}>
-        {isEditing ? <FaSave /> : <FaEdit />}
-        {isEditing ? ' Save' : ' Edit'}
-      </button>
-      <button className={styles.RemoveButton} onClick={() => onRemoveTodo(todo.id)}>
-        <FaTrash />
-        Remove
-      </button>
+      <div className={styles.ButtonGroup}>
+        <button className={styles.CompleteButton} onClick={() => onToggleComplete(todo.id, todo.completedAt)}>
+          {isCompleted ? <FaUndo /> : <FaCheck />}
+          {isCompleted ? ' Undo' : ' Mark as Completed'}
+        </button>
+        <button className={styles.EditButton} onClick={handleEdit}>
+          {isEditing ? <FaSave /> : <FaEdit />}
+          {isEditing ? ' Save' : ' Edit'}
+        </button>
+        <button className={styles.RemoveButton} onClick={() => onRemoveTodo(todo.id)}>
+          <FaTrash />
+          Remove
+        </button>
+      </div>
     </li>
   );
 };

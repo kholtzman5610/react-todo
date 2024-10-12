@@ -11,6 +11,7 @@
   font-family: 'Arial, sans-serif';
   font-size: 16px;
   text-align: center;
+  flex-wrap: wrap;
 }
 
 /* Button styling for the complete button */
@@ -79,6 +80,28 @@
   background-color: #2980b9;
 }
 
+/* Button group styling to align buttons to the right */
+.ButtonGroup {
+  display: flex;
+  gap: 8px; /* Add spacing between buttons */
+}
+
+/* See More Button styling */
+.SeeMoreButton {
+  background: none;
+  border: none;
+  color: #3498db;
+  cursor: pointer;
+  font-size: 14px;
+  margin-left: 5px;
+}
+
+/* Style for the completed date */
+.CompletedAt {
+  font-size: 14px;
+  color: #666;
+  margin-top: 5px;
+}
 
 /* Media Queries for responsive design */
 @media (max-width: 600px) {
@@ -87,7 +110,12 @@
   }
 
   .RemoveButton,
-  .CompleteButton {
+  .CompleteButton,
+  .EditButton {
     padding: 6px 12px;
+  }
+
+  .ButtonGroup {
+    flex-direction: column;
   }
 }
