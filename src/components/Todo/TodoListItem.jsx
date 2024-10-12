@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import styles from './TodoListItem.module.css';
-import { FaUndo, FaCheck, FaEdit, FaTrash } from 'react-icons/fa';
+import { FaUndo, FaCheck, FaEdit, FaSave, FaTrash } from 'react-icons/fa';
 
 const TodoListItem = ({ todo, onRemove, onToggleComplete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
@@ -40,7 +40,8 @@ const TodoListItem = ({ todo, onRemove, onToggleComplete, onEdit }) => {
         {isCompleted ? ' Undo' : ' Mark as Completed'}
       </button>
       <button className={styles.EditButton} onClick={handleEdit}>
-        {isEditing ? 'Save' : <FaEdit />}
+        {isEditing ? <FaSave /> : <FaEdit />}
+        {isEditing ? ' Save' : ' Edit'}
       </button>
       <button className={styles.RemoveButton} onClick={() => onRemove(todo.id)}>
         <FaTrash />
