@@ -9,7 +9,7 @@ test('renders input with label and calls handleTitleChange when typing', async (
   render(
     <InputWithLabel
       label="Title"
-      id="title"
+      id="todoTitle"
       todoTitle=""
       handleTitleChange={handleTitleChange}
     >

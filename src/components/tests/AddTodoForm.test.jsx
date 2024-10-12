@@ -1,9 +1,9 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
-import '@testing-library/jest-dom';
 import AddTodoForm from '../Todo/AddTodoForm';
+import '@testing-library/jest-dom';
 
-test('renders input and button', () => {
+test('renders input and button in AddTodoForm', () => {
   render(<AddTodoForm onAddTodo={() => {}} />);
 
   const inputElement = screen.getByLabelText(/title/i);
