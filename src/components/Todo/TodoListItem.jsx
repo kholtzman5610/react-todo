@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import styles from './TodoListItem.module.css';
 import { FaUndo, FaCheck, FaEdit, FaSave, FaTrash } from 'react-icons/fa';
 
-const TodoListItem = ({ todo, onRemove, onToggleComplete, onEdit }) => {
+const TodoListItem = ({ todo, onRemoveTodo, onToggleComplete, onEdit }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [newTitle, setNewTitle] = useState(todo.title);
   const isCompleted = !!todo.completedAt;
@@ -43,7 +43,7 @@ const TodoListItem = ({ todo, onRemove, onToggleComplete, onEdit }) => {
         {isEditing ? <FaSave /> : <FaEdit />}
         {isEditing ? ' Save' : ' Edit'}
       </button>
-      <button className={styles.RemoveButton} onClick={() => onRemove(todo.id)}>
+      <button className={styles.RemoveButton} onClick={() => onRemoveTodo(todo.id)}>
         <FaTrash />
         Remove
       </button>
@@ -57,7 +57,7 @@ TodoListItem.propTypes = {
     title: PropTypes.string.isRequired,
     completedAt: PropTypes.string,
   }).isRequired,
-  onRemove: PropTypes.func.isRequired,
+  onRemoveTodo: PropTypes.func.isRequired,
   onToggleComplete: PropTypes.func.isRequired,
   onEdit: PropTypes.func.isRequired,
 };
