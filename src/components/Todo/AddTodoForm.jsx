@@ -28,7 +28,7 @@ const AddTodoForm = ({ onAddTodo }) => {
   return (
     <div className="add-todo-form">
       <p className="info-paragraph">
-        The Enter key saves the changes and adds it to the list, while Shift+Enter allows for line breaks.
+        The Enter key saves the changes and adds it to the list
       </p>
       <form onSubmit={handleAddTodo}>
         <InputWithLabel 

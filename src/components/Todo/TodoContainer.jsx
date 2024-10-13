@@ -141,7 +141,10 @@ const TodoContainer = ({ tableName }) => {
     }
   }, [tableName]);
 
-  const toggleComplete = useCallback(async (id, completedAt) => {
+  const toggleComplete = useCallback(async (id, currentCompletedAt) => {
+    const isCompleted = Boolean(currentCompletedAt);
+    const newCompletedAt = isCompleted ? null : new Date().toISOString().split('T')[0];
+  
     const options = {
       method: 'PATCH',
       headers: {
@@ -150,18 +153,24 @@ const TodoContainer = ({ tableName }) => {
       },
       body: JSON.stringify({
         fields: {
-          completedAt: completedAt ? null : new Date().toISOString(),
+          completedAt: newCompletedAt,
         },
       }),
     };
-
-    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${tableName}/${id}`;
-
+  
+    const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}/${id}`;
+  
     try {
-      await fetch(url, options);
+      const response = await fetch(url, options);
+  
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(`Error: ${response.status} - ${errorText}`);
+      }
+  
       setTodoList((prevTodoList) =>
         prevTodoList.map((todo) =>
-          todo.id === id ? { ...todo, completedAt: completedAt ? null : new Date().toISOString() } : todo
+          todo.id === id ? { ...todo, completedAt: newCompletedAt } : todo
         )
       );
     } catch (error) {
@@ -169,6 +178,7 @@ const TodoContainer = ({ tableName }) => {
       console.error('Error toggling todo completion:', error);
     }
   }, [tableName]);
+  
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
