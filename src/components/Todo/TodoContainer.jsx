@@ -144,7 +144,7 @@ const TodoContainer = ({ tableName }) => {
   const toggleComplete = useCallback(async (id, currentCompletedAt) => {
     const isCompleted = Boolean(currentCompletedAt);
     const newCompletedAt = isCompleted ? null : new Date().toISOString().split('T')[0];
-  
+
     const options = {
       method: 'PATCH',
       headers: {
@@ -157,17 +157,17 @@ const TodoContainer = ({ tableName }) => {
         },
       }),
     };
-  
+
     const url = `https://api.airtable.com/v0/${import.meta.env.VITE_AIRTABLE_BASE_ID}/${import.meta.env.VITE_TABLE_NAME}/${id}`;
-  
+
     try {
       const response = await fetch(url, options);
-  
+
       if (!response.ok) {
         const errorText = await response.text();
         throw new Error(`Error: ${response.status} - ${errorText}`);
       }
-  
+
       setTodoList((prevTodoList) =>
         prevTodoList.map((todo) =>
           todo.id === id ? { ...todo, completedAt: newCompletedAt } : todo
@@ -178,7 +178,7 @@ const TodoContainer = ({ tableName }) => {
       console.error('Error toggling todo completion:', error);
     }
   }, [tableName]);
-  
+
 
   const toggleSortOrder = () => {
     setSortOrder((prevOrder) => (prevOrder === 'asc' ? 'desc' : 'asc'));
