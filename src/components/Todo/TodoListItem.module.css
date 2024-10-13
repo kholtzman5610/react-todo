@@ -102,6 +102,22 @@
   margin-top: 5px;
 }
 
+.TextArea {
+  width: 100%;
+  border-radius: 5px;
+  padding: 8px;
+  font-size: 16px;
+  font-family: 'Arial, sans-serif';
+  border: 1px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+.TextArea:focus {
+  border-color: #3498db;
+  outline: none;
+}
+
+
 /* Media Queries for responsive design */
 @media (max-width: 600px) {
   .ListItem {

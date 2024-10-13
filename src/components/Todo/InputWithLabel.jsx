@@ -6,6 +6,7 @@ const InputWithLabel = ({
   todoTitle,
   handleTitleChange,
   children,
+  onKeyDown
 }) => {
   const inputRef = useRef(null);
 
@@ -21,6 +22,7 @@ const InputWithLabel = ({
         type="text"
         value={todoTitle}
         onChange={handleTitleChange}
+        onKeyDown={onKeyDown}
         ref={inputRef}
       />
     </>
@@ -32,6 +34,7 @@ InputWithLabel.propTypes = {
   todoTitle: PropTypes.string.isRequired,
   handleTitleChange: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
+  onKeyDown: PropTypes.func,
 };
 
 export default InputWithLabel;
