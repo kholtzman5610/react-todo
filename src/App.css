@@ -24,12 +24,10 @@ body {
   min-height: 100vh;
   padding: 20px;
   text-align: center;
-  color: black;
 }
 
 /* Header styles for icon and title */
 .header {
-  display: flex;
   align-items: center;
   gap: 15px;
   margin-bottom: 30px;
@@ -75,15 +73,6 @@ li::before {
   margin-right: 15px;
   color: black;
   font-size: 1.5em;
-}
-
-/* Style for AddTodoForm container */
-.add-todo-form {
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 /* Style for input field in the form */

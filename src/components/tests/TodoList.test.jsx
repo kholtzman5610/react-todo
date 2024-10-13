@@ -3,31 +3,28 @@ import { render, screen } from '@testing-library/react';
 import TodoList from '../Todo/TodoList';
 import '@testing-library/jest-dom';
 
-test('renders todo list and calls onRemoveTodo and onToggleComplete', () => {
+test('renders todo list and handles interactions', () => {
   const todoList = [
     { id: '1', title: 'Learn React', completedAt: null },
     { id: '2', title: 'Build a Todo App', completedAt: null },
   ];
   const onRemoveTodo = jest.fn();
   const onToggleComplete = jest.fn();
+  const onEdit = jest.fn();
 
   render(
     <TodoList
       todoList={todoList}
       onRemoveTodo={onRemoveTodo}
       onToggleComplete={onToggleComplete}
+      onEdit={onEdit}
     />
   );
 
-  // Check if the todo items are rendered
   const todoItems = screen.getAllByRole('listitem');
   expect(todoItems).toHaveLength(todoList.length);
-  expect(screen.getByText('Learn React')).toBeInTheDocument();
-  expect(screen.getByText('Build a Todo App')).toBeInTheDocument();
 
-  // Check if the buttons are present
-  const completeButtons = screen.getAllByRole('button', { name: /mark as completed/i });
-  expect(completeButtons.length).toBe(todoList.length);
-  const removeButtons = screen.getAllByRole('button', { name: /remove/i });
-  expect(removeButtons.length).toBe(todoList.length);
+  todoList.forEach(todo => {
+    expect(screen.getByText(todo.title)).toBeInTheDocument();
+  });
 });

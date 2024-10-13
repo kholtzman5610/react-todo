@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import styles from './TodoListItem.module.css';
 import { FaUndo, FaCheck, FaEdit, FaSave, FaTrash } from 'react-icons/fa';
@@ -8,6 +8,14 @@ const TodoListItem = ({ todo, onRemoveTodo, onToggleComplete, onEdit }) => {
   const [newTitle, setNewTitle] = useState(todo.title);
   const [isExpanded, setIsExpanded] = useState(false);
   const isCompleted = !!todo.completedAt;
+  const textareaRef = useRef(null);
+
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = 'auto';
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [newTitle]);
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
 
@@ -23,7 +31,8 @@ const TodoListItem = ({ todo, onRemoveTodo, onToggleComplete, onEdit }) => {
   };
 
   const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
       handleEdit();
     }
   };
@@ -34,11 +43,13 @@ const TodoListItem = ({ todo, onRemoveTodo, onToggleComplete, onEdit }) => {
         <div>
           <span style={{ textDecoration: isCompleted ? 'line-through' : 'none' }}>
             {isEditing ? (
-              <input
-                type="text"
+              <textarea
+                ref={textareaRef}
                 value={newTitle}
                 onChange={(e) => setNewTitle(e.target.value)}
                 onKeyPress={handleKeyPress}
+                className={styles.TextArea} 
+                rows={1}
               />
             ) : (
               truncatedText

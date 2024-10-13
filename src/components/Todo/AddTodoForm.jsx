@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import InputWithLabel from './InputWithLabel';
-
+import './AddTodoForm.css';
 
 const AddTodoForm = ({ onAddTodo }) => {
   const [todoTitle, setTodoTitle] = useState('');
@@ -18,13 +18,30 @@ const AddTodoForm = ({ onAddTodo }) => {
     }
   };
 
+  const handleKeyDown = (event) => {
+    if (event.key === 'Enter' && !event.shiftKey) {
+      event.preventDefault();
+      handleAddTodo(event);
+    }
+  };
+
   return (
-    <form onSubmit={handleAddTodo}>
-      <InputWithLabel id="todoTitle" todoTitle={todoTitle} handleTitleChange={handleTitleChange}>
-        Title
-      </InputWithLabel>
-      <button type="submit">Add</button>
-    </form>
+    <div className="add-todo-form">
+      <p className="info-paragraph">
+        The Enter key saves the changes and adds it to the list, while Shift+Enter allows for line breaks.
+      </p>
+      <form onSubmit={handleAddTodo}>
+        <InputWithLabel 
+          id="todoTitle" 
+          todoTitle={todoTitle} 
+          handleTitleChange={handleTitleChange} 
+          onKeyDown={handleKeyDown}
+        >
+          Title
+        </InputWithLabel>
+        <button type="submit">Add</button>
+      </form>
+    </div>
   );
 };
 
