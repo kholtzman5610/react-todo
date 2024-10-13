@@ -1,12 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from 'react';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import TodoContainer from './components/Todo/TodoContainer';
 import Home from './components/Home/Home';
 import './App.css';
 import './navbar-style.scss';
 import Navigation from './components/Navigation/Navigation';
 import NavLink from './components/Navigation/NavLink';
-
 
 function App() {
   return (
