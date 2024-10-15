@@ -25,17 +25,24 @@ const AddTodoForm = ({ onAddTodo }) => {
     }
   };
 
+  const handleInput = (event) => {
+    const textarea = event.target;
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
+  };
+  
+
   return (
     <div className="add-todo-form">
       <p className="info-paragraph">
-        The Enter key saves the changes and adds it to the list
+        Press Enter to submit, Shift+Enter for a new line.
       </p>
       <form onSubmit={handleAddTodo}>
         <InputWithLabel 
           id="todoTitle" 
           todoTitle={todoTitle} 
           handleTitleChange={handleTitleChange} 
-          onKeyDown={handleKeyDown}
+          handleKeyDown={handleKeyDown}
         >
           Title
         </InputWithLabel>

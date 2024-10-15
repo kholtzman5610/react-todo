@@ -5,8 +5,8 @@ const InputWithLabel = ({
   id,
   todoTitle,
   handleTitleChange,
+  handleKeyDown,
   children,
-  onKeyDown
 }) => {
   const inputRef = useRef(null);
 
@@ -17,13 +17,13 @@ const InputWithLabel = ({
   return (
     <>
       <label htmlFor={id}>{children}</label>
-      <input
+      <textarea
         id={id}
-        type="text"
         value={todoTitle}
         onChange={handleTitleChange}
-        onKeyDown={onKeyDown}
+        onKeyDown={handleKeyDown}
         ref={inputRef}
+        rows="3"
       />
     </>
   );
@@ -33,8 +33,8 @@ InputWithLabel.propTypes = {
   id: PropTypes.string.isRequired,
   todoTitle: PropTypes.string.isRequired,
   handleTitleChange: PropTypes.func.isRequired,
+  handleKeyDown: PropTypes.func.isRequired,
   children: PropTypes.node.isRequired,
-  onKeyDown: PropTypes.func,
 };
 
 export default InputWithLabel;
